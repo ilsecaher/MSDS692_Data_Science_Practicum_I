@@ -104,7 +104,7 @@ FI = pd.DataFrame({
 })
 CAT_COLORS = {"Demographic (ACS)": NAVY, "Market (Zillow)": "#4472C4", "College (IPEDS)": GOLD}
 
-fi_col, corr_col = st.columns([3, 2])
+fi_col, pie_col = st.columns([3, 2])
 fi_sorted = FI.sort_values("importance")
 
 with fi_col:
@@ -128,55 +128,21 @@ with fi_col:
     )
     st.plotly_chart(fig_fi, use_container_width=True)
 
-with corr_col:
-    # Compute zhvi_yoy_pct if not present
-    corr_df = df_ml.copy()
-    if "zhvi_yoy_pct" not in corr_df.columns and "avg_zhvi" in corr_df.columns:
-        corr_df = corr_df.sort_values(["state", "county", "year"])
-        corr_df["zhvi_yoy_pct"] = (
-            corr_df.groupby(["state", "county"])["avg_zhvi"]
-            .pct_change() * 100
-        )
-
-    CORR_FEATURES = [
-        ("median_home_value",  "median_home_value → Yield"),
-        ("zhvi_yoy_pct",       "zhvi_yoy_pct → Yield"),
-        ("enrollment_intensity","enrollment_intensity → Yield"),
-        ("unemployment_rate",  "unemployment_rate → Yield"),
-        ("vacancy_rate",       "vacancy_rate → Yield"),
-    ]
-
-    corr_rows = []
-    for col, label in CORR_FEATURES:
-        if col in corr_df.columns and "gross_rental_yield" in corr_df.columns:
-            sub = corr_df[[col, "gross_rental_yield"]].dropna()
-            r = sub[col].corr(sub["gross_rental_yield"])
-            corr_rows.append({"label": label, "corr": round(r, 3)})
-
-    corr_data = pd.DataFrame(corr_rows).sort_values("corr")
-    bar_colors = [RED if v < 0 else NAVY for v in corr_data["corr"]]
-
-    fig_corr = go.Figure(go.Bar(
-        x=corr_data["corr"],
-        y=corr_data["label"],
-        orientation="h",
-        marker_color=bar_colors,
-        text=[f"{v:+.3f}" for v in corr_data["corr"]],
-        textposition="outside",
+with pie_col:
+    cat_totals = FI.groupby("category")["importance"].sum().reset_index()
+    fig_pie = go.Figure(go.Pie(
+        labels=cat_totals["category"], values=cat_totals["importance"],
+        hole=0.45,
+        marker_colors=cat_totals["category"].map(CAT_COLORS).fillna(GRAY).tolist(),
+        textinfo="label+percent", pull=[0.05] * len(cat_totals),
     ))
-    fig_corr.update_layout(
+    fig_pie.update_layout(
         **LAYOUT_BASE,
-        title="<b>Correlation by Channel</b>",
-        xaxis=dict(
-            title="Pearson correlation with Yield",
-            showgrid=True, gridcolor="#E5E7EB",
-            zeroline=True, zerolinecolor=GRAY, zerolinewidth=1.5,
-        ),
-        yaxis=dict(showgrid=False),
-        height=380, margin=dict(l=10, r=60, t=45, b=30),
+        title="<b>Importance by Data Source</b>",
+        height=380, margin=dict(l=10, r=10, t=45, b=10),
         showlegend=False,
     )
-    st.plotly_chart(fig_corr, use_container_width=True)
+    st.plotly_chart(fig_pie, use_container_width=True)
 
 # Key drivers plain language
 for color, title, text in [
