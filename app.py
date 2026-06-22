@@ -1,0 +1,197 @@
+import streamlit as st
+from app_utils import (
+    TEAL, NAVY, MID, GOLD, GREEN, LIGHT, GRAY, FONT,
+    load_predictions, page_header, kpi_row, section_title,
+)
+
+st.set_page_config(
+    page_title="College Town Rental Investment Dashboard",
+    page_icon="🏘️",
+    layout="wide",
+)
+
+st.markdown(
+    f"""
+    <div style="background:linear-gradient(135deg,{TEAL} 0%,#0F4060 60%,#1B3A6B 100%);
+                padding:36px 40px 26px;border-radius:12px;margin-bottom:24px;
+                box-shadow:0 4px 16px rgba(0,0,0,0.20)">
+      <p style="color:{GOLD};font-size:12px;font-family:Arial,sans-serif;
+                margin:0 0 10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600">
+        MSDS 692 · Data Science Practicum I · Regis University · Ilse Severance
+      </p>
+      <h1 style="color:white;margin:0;font-size:32px;font-family:Arial,sans-serif;
+                 line-height:1.25;font-weight:700">
+        Machine Learning Framework for Rental<br>Investment Analysis in College Towns
+      </h1>
+      <p style="color:#B8D4E8;margin:16px 0 0;font-size:15px;font-family:Arial,sans-serif;
+                max-width:720px;line-height:1.65">
+        <em style="color:{GOLD};font-style:normal;font-weight:600">Research question:</em>
+        Which U.S. college-town counties appear to have the strongest rental investment
+        potential, and why?
+      </p>
+      <p style="color:#7AA4C0;margin:10px 0 0;font-size:13px;font-family:Arial,sans-serif">
+        Use the sidebar to explore all pages →
+      </p>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+kpi_row([
+    ("College-Town Counties", "428", TEAL),
+    ("States Covered", "49", GOLD),
+    ("Years of Historical Data", "2012–2024", TEAL),
+    ("Forecast Horizon", "2025–2026", GOLD),
+    ("Best Model", "Random Forest", GREEN),
+])
+
+st.markdown("<br>", unsafe_allow_html=True)
+
+col_left, col_right = st.columns([3, 2], gap="large")
+
+with col_left:
+    section_title("Project Overview")
+    st.markdown(
+        """
+        This project builds a machine learning pipeline to identify which U.S. college-town
+        counties offer the strongest gross rental yield potential for real estate investors.
+        Using a **Random Forest** model trained on 13 years of county-level data, we generate
+        forward-looking yield predictions for **2025 and 2026** across 428 counties spanning
+        49 states.
+
+        The analysis integrates three primary data sources — rental market data (Zillow),
+        demographic and housing characteristics (U.S. Census ACS), and college enrollment
+        figures (IPEDS) — to capture the unique demand dynamics that distinguish college
+        towns from the broader housing market.
+
+        The core insight is that college towns create persistent, inelastic rental demand:
+        students need housing regardless of economic cycles, yet housing supply in many
+        markets has failed to keep pace with enrollment growth. Counties where this
+        imbalance is most acute tend to sustain higher gross rental yields over time.
+        """,
+    )
+
+    section_title("Data Sources")
+    for src, desc in [
+        ("Zillow (ZORI / ZHVI)", "Monthly rent index and home value index at county level, 2012–2024. Primary source for yield computation."),
+        ("U.S. Census ACS", "5-year estimates for income, rent, home value, vacancy rate, and educational attainment. Interpolated across census waves."),
+        ("IPEDS (Postsecondary Education)", "Annual enrollment, housing capacity, graduation rates, room & board costs, and admissions data for colleges within each county."),
+    ]:
+        st.markdown(
+            f"""<div style="background:{LIGHT};border-left:5px solid {TEAL};
+                border-radius:6px;padding:10px 16px;margin-bottom:8px;
+                box-shadow:0 1px 3px rgba(13,51,73,0.07)">
+              <strong style="color:{TEAL}">{src}</strong><br>
+              <span style="font-size:13px;color:{GRAY}">{desc}</span>
+            </div>""",
+            unsafe_allow_html=True,
+        )
+
+with col_right:
+    section_title("Final Model Performance")
+    st.markdown(
+        f"""<div style="background:linear-gradient(135deg,{TEAL} 0%,#0F4060 100%);
+                        border-radius:10px;padding:20px 24px;margin-bottom:16px;
+                        box-shadow:0 2px 8px rgba(0,0,0,0.18)">
+          <p style="color:{GOLD};font-size:12px;margin:0 0 4px;letter-spacing:0.5px">BEST MODEL · RANDOM FOREST</p>
+          <p style="color:#B0C4E8;font-size:12px;margin:0 0 16px">Test set: 2024 · 510 counties · trained on 2012–2023</p>
+          <div style="display:flex;gap:16px;flex-wrap:wrap">
+            <div style="flex:1;background:rgba(255,255,255,0.08);border-radius:8px;padding:14px;text-align:center">
+              <div style="color:{GOLD};font-size:24px;font-weight:700">0.57%</div>
+              <div style="color:#B0C4E8;font-size:11px;margin-top:4px">MAE</div>
+            </div>
+            <div style="flex:1;background:rgba(255,255,255,0.08);border-radius:8px;padding:14px;text-align:center">
+              <div style="color:{GOLD};font-size:24px;font-weight:700">0.79%</div>
+              <div style="color:#B0C4E8;font-size:11px;margin-top:4px">RMSE</div>
+            </div>
+            <div style="flex:1;background:rgba(255,255,255,0.08);border-radius:8px;padding:14px;text-align:center">
+              <div style="color:{GOLD};font-size:24px;font-weight:700">66%</div>
+              <div style="color:#B0C4E8;font-size:11px;margin-top:4px">R² (variance explained)</div>
+            </div>
+          </div>
+          <p style="color:#8AA6C8;font-size:11px;margin:12px 0 0;line-height:1.5">
+            Tuned RF outperformed LightGBM, XGBoost, and Ridge baselines on the held-out
+            2024 test set. A 0.57% MAE on yields averaging ~6% represents ~9% relative error.
+            See <strong style="color:{GOLD}">The Model</strong> page for full details.
+          </p>
+        </div>""",
+        unsafe_allow_html=True,
+    )
+
+    section_title("Dataset at a Glance")
+    rows = [
+        ("Training rows", "6,113"),
+        ("Test rows (2024)", "510"),
+        ("Features used", "20+"),
+        ("CV strategy", "Walk-forward (yearly folds)"),
+        ("Prediction years", "2025 & 2026"),
+        ("Models compared", "RF, LightGBM, XGBoost, Ridge"),
+    ]
+    for label, val in rows:
+        st.markdown(
+            f'<div style="display:flex;justify-content:space-between;padding:5px 0;'
+            f'border-bottom:1px solid #E5E7EB;font-size:13px">'
+            f'<span style="color:{GRAY}">{label}</span>'
+            f'<span style="color:{TEAL};font-weight:600">{val}</span></div>',
+            unsafe_allow_html=True,
+        )
+
+st.markdown("<br>", unsafe_allow_html=True)
+
+with st.expander("About this Project & Methodology"):
+    st.markdown(
+        f"""
+        <div style="font-size:14px;line-height:1.8;color:#374151">
+
+        <p><strong style="color:{TEAL}">Course:</strong>
+        MSDS 692 — Data Science Practicum I · Regis University · June 2026<br>
+        <strong style="color:{TEAL}">Author:</strong> Ilse Severance</p>
+
+        <hr style="border:none;border-top:1px solid #E5E7EB;margin:10px 0">
+
+        <p><strong style="color:{TEAL}">Research Question</strong><br>
+        Which U.S. college-town counties appear to have the strongest rental investment
+        potential, and why?</p>
+
+        <p><strong style="color:{TEAL}">What is a college town?</strong><br>
+        For this project, a college town is defined as any U.S. county containing at least
+        one postsecondary institution with reported IPEDS enrollment data. The final dataset
+        covers 428 counties across 49 states.</p>
+
+        <p><strong style="color:{TEAL}">Data Pipeline</strong><br>
+        Four data sources were merged at the county-year level:
+        <br>• <strong>Zillow ZORI/ZHVI</strong> — monthly rent index and home value index (2012–2024)
+        <br>• <strong>U.S. Census ACS</strong> — income, vacancy rate, home value, educational attainment
+        <br>• <strong>IPEDS</strong> — enrollment, on-campus housing capacity, room &amp; board costs
+        <br>• <strong>FRED</strong> — mortgage rate and federal funds rate</p>
+
+        <p><strong style="color:{TEAL}">Target Variable</strong><br>
+        Gross Rental Yield = (Annual Rent ÷ Home Value) × 100. Computed from Zillow ZORI
+        and ZHVI at the county level. Counties relying on ACS rent estimates (no Zillow
+        coverage) are flagged with lower confidence.</p>
+
+        <p><strong style="color:{TEAL}">Modeling Approach</strong><br>
+        Five models were evaluated: Ridge regression (baseline), Random Forest, LightGBM,
+        XGBoost, and ensemble combinations. Validation used a <strong>walk-forward
+        cross-validation</strong> strategy (training on years prior to each fold) to prevent
+        data leakage. The final model was retrained on the full 2012–2024 dataset to generate
+        2025–2026 predictions.</p>
+
+        <p><strong style="color:{TEAL}">How to Read This Dashboard</strong><br>
+        • <strong>Explore the Market</strong> — national map + filterable county table<br>
+        • <strong>Investment Opportunities</strong> — model-curated top counties by yield and momentum<br>
+        • <strong>Comparison Tool</strong> — side-by-side comparison of up to 5 counties<br>
+        • <strong>Historical Trends</strong> — actual yield 2012–2024 extended with forecasts<br>
+        • <strong>The Model</strong> — feature importance, correlation analysis, and interactive simulator</p>
+
+        <p><strong style="color:{TEAL}">Limitations</strong><br>
+        Gross yield is a pre-expense metric and does not account for property taxes,
+        maintenance, insurance, or financing costs. IPEDS enrollment data is available
+        through 2021 only. County-level FIPS codes were not available, so the map
+        displays state-level averages. Predictions should be used for screening purposes,
+        not as investment advice.</p>
+
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
