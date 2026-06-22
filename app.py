@@ -1,6 +1,6 @@
 import streamlit as st
 from app_utils import (
-    NAVY, GOLD, GREEN, LIGHT, GRAY, FONT,
+    TEAL, NAVY, MID, GOLD, GREEN, LIGHT, GRAY, FONT,
     load_predictions, page_header, kpi_row, section_title,
 )
 
@@ -12,21 +12,24 @@ st.set_page_config(
 
 st.markdown(
     f"""
-    <div style="background:{NAVY};padding:32px 36px 24px;border-radius:12px;margin-bottom:24px">
-      <p style="color:{GOLD};font-size:13px;font-family:Arial,sans-serif;
-                margin:0 0 8px;letter-spacing:1px;text-transform:uppercase">
-        MSDS 692 · Data Science Practicum I · Ilse Severance
+    <div style="background:linear-gradient(135deg,{TEAL} 0%,#0F4060 60%,#1B3A6B 100%);
+                padding:36px 40px 26px;border-radius:12px;margin-bottom:24px;
+                box-shadow:0 4px 16px rgba(0,0,0,0.20)">
+      <p style="color:{GOLD};font-size:12px;font-family:Arial,sans-serif;
+                margin:0 0 10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600">
+        MSDS 692 · Data Science Practicum I · Regis University · Ilse Severance
       </p>
-      <h1 style="color:white;margin:0;font-size:30px;font-family:Arial,sans-serif;line-height:1.25">
+      <h1 style="color:white;margin:0;font-size:32px;font-family:Arial,sans-serif;
+                 line-height:1.25;font-weight:700">
         Machine Learning Framework for Rental<br>Investment Analysis in College Towns
       </h1>
-      <p style="color:#B0C4E8;margin:14px 0 0;font-size:15px;font-family:Arial,sans-serif;
-                max-width:720px;line-height:1.6">
+      <p style="color:#B8D4E8;margin:16px 0 0;font-size:15px;font-family:Arial,sans-serif;
+                max-width:720px;line-height:1.65">
         <em style="color:{GOLD};font-style:normal;font-weight:600">Research question:</em>
         Which U.S. college-town counties appear to have the strongest rental investment
         potential, and why?
       </p>
-      <p style="color:#8AA6C8;margin:12px 0 0;font-size:13px;font-family:Arial,sans-serif">
+      <p style="color:#7AA4C0;margin:10px 0 0;font-size:13px;font-family:Arial,sans-serif">
         Use the sidebar to explore all pages →
       </p>
     </div>
@@ -35,9 +38,9 @@ st.markdown(
 )
 
 kpi_row([
-    ("College-Town Counties", "428", NAVY),
+    ("College-Town Counties", "428", TEAL),
     ("States Covered", "49", GOLD),
-    ("Years of Historical Data", "2012–2024", NAVY),
+    ("Years of Historical Data", "2012–2024", TEAL),
     ("Forecast Horizon", "2025–2026", GOLD),
     ("Best Model", "Random Forest", GREEN),
 ])
@@ -75,9 +78,10 @@ with col_left:
         ("IPEDS (Postsecondary Education)", "Annual enrollment, housing capacity, graduation rates, room & board costs, and admissions data for colleges within each county."),
     ]:
         st.markdown(
-            f"""<div style="background:{LIGHT};border-left:4px solid {GOLD};
-                border-radius:6px;padding:10px 14px;margin-bottom:8px">
-              <strong style="color:{NAVY}">{src}</strong><br>
+            f"""<div style="background:{LIGHT};border-left:5px solid {TEAL};
+                border-radius:6px;padding:10px 16px;margin-bottom:8px;
+                box-shadow:0 1px 3px rgba(13,51,73,0.07)">
+              <strong style="color:{TEAL}">{src}</strong><br>
               <span style="font-size:13px;color:{GRAY}">{desc}</span>
             </div>""",
             unsafe_allow_html=True,
@@ -86,7 +90,9 @@ with col_left:
 with col_right:
     section_title("Final Model Performance")
     st.markdown(
-        f"""<div style="background:{NAVY};border-radius:10px;padding:20px 24px;margin-bottom:16px">
+        f"""<div style="background:linear-gradient(135deg,{TEAL} 0%,#0F4060 100%);
+                        border-radius:10px;padding:20px 24px;margin-bottom:16px;
+                        box-shadow:0 2px 8px rgba(0,0,0,0.18)">
           <p style="color:{GOLD};font-size:12px;margin:0 0 4px;letter-spacing:0.5px">BEST MODEL · RANDOM FOREST</p>
           <p style="color:#B0C4E8;font-size:12px;margin:0 0 16px">Test set: 2024 · 510 counties · trained on 2012–2023</p>
           <div style="display:flex;gap:16px;flex-wrap:wrap">
@@ -126,6 +132,6 @@ with col_right:
             f'<div style="display:flex;justify-content:space-between;padding:5px 0;'
             f'border-bottom:1px solid #E5E7EB;font-size:13px">'
             f'<span style="color:{GRAY}">{label}</span>'
-            f'<span style="color:{NAVY};font-weight:600">{val}</span></div>',
+            f'<span style="color:{TEAL};font-weight:600">{val}</span></div>',
             unsafe_allow_html=True,
         )
