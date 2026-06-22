@@ -24,8 +24,6 @@ LAYOUT_BASE = dict(
     plot_bgcolor="white",
     paper_bgcolor="white",
     title_font=dict(size=16, color=NAVY, family="Arial, sans-serif"),
-    xaxis=dict(showgrid=True, gridcolor="#E5E7EB", zeroline=False),
-    yaxis=dict(showgrid=True, gridcolor="#E5E7EB", zeroline=False),
     margin=dict(l=10, r=70, t=50, b=40),
 )
 
@@ -217,12 +215,10 @@ trend_fig.update_layout(
     xaxis=dict(showgrid=True, gridcolor="#E5E7EB", zeroline=False,
                tickmode="linear", dtick=2),
     yaxis=dict(showgrid=True, gridcolor="#E5E7EB", zeroline=False,
-               tickformat=".1%", tickvals=[v/100 for v in [4.5,5.0,5.5,6.0,6.5]],
-               ticktext=["4.5%","5.0%","5.5%","6.0%","6.5%"]),
+               ticksuffix="%"),
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
     height=380, margin=dict(l=10, r=20, t=60, b=40),
 )
-trend_fig.update_yaxes(tickformat=".1f", ticksuffix="%")
 
 with col_a:
     st.plotly_chart(trend_fig, use_container_width=True)
