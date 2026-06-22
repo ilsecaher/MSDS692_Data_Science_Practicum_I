@@ -135,3 +135,63 @@ with col_right:
             f'<span style="color:{TEAL};font-weight:600">{val}</span></div>',
             unsafe_allow_html=True,
         )
+
+st.markdown("<br>", unsafe_allow_html=True)
+
+with st.expander("About this Project & Methodology"):
+    st.markdown(
+        f"""
+        <div style="font-size:14px;line-height:1.8;color:#374151">
+
+        <p><strong style="color:{TEAL}">Course:</strong>
+        MSDS 692 — Data Science Practicum I · Regis University · June 2026<br>
+        <strong style="color:{TEAL}">Author:</strong> Ilse Severance</p>
+
+        <hr style="border:none;border-top:1px solid #E5E7EB;margin:10px 0">
+
+        <p><strong style="color:{TEAL}">Research Question</strong><br>
+        Which U.S. college-town counties appear to have the strongest rental investment
+        potential, and why?</p>
+
+        <p><strong style="color:{TEAL}">What is a college town?</strong><br>
+        For this project, a college town is defined as any U.S. county containing at least
+        one postsecondary institution with reported IPEDS enrollment data. The final dataset
+        covers 428 counties across 49 states.</p>
+
+        <p><strong style="color:{TEAL}">Data Pipeline</strong><br>
+        Four data sources were merged at the county-year level:
+        <br>• <strong>Zillow ZORI/ZHVI</strong> — monthly rent index and home value index (2012–2024)
+        <br>• <strong>U.S. Census ACS</strong> — income, vacancy rate, home value, educational attainment
+        <br>• <strong>IPEDS</strong> — enrollment, on-campus housing capacity, room &amp; board costs
+        <br>• <strong>FRED</strong> — mortgage rate and federal funds rate</p>
+
+        <p><strong style="color:{TEAL}">Target Variable</strong><br>
+        Gross Rental Yield = (Annual Rent ÷ Home Value) × 100. Computed from Zillow ZORI
+        and ZHVI at the county level. Counties relying on ACS rent estimates (no Zillow
+        coverage) are flagged with lower confidence.</p>
+
+        <p><strong style="color:{TEAL}">Modeling Approach</strong><br>
+        Five models were evaluated: Ridge regression (baseline), Random Forest, LightGBM,
+        XGBoost, and ensemble combinations. Validation used a <strong>walk-forward
+        cross-validation</strong> strategy (training on years prior to each fold) to prevent
+        data leakage. The final model was retrained on the full 2012–2024 dataset to generate
+        2025–2026 predictions.</p>
+
+        <p><strong style="color:{TEAL}">How to Read This Dashboard</strong><br>
+        • <strong>Explore the Market</strong> — national map + filterable county table<br>
+        • <strong>Investment Opportunities</strong> — model-curated top counties by yield and momentum<br>
+        • <strong>Comparison Tool</strong> — side-by-side comparison of up to 5 counties<br>
+        • <strong>Historical Trends</strong> — actual yield 2012–2024 extended with forecasts<br>
+        • <strong>The Model</strong> — feature importance, correlation analysis, and interactive simulator</p>
+
+        <p><strong style="color:{TEAL}">Limitations</strong><br>
+        Gross yield is a pre-expense metric and does not account for property taxes,
+        maintenance, insurance, or financing costs. IPEDS enrollment data is available
+        through 2021 only. County-level FIPS codes were not available, so the map
+        displays state-level averages. Predictions should be used for screening purposes,
+        not as investment advice.</p>
+
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
