@@ -1,7 +1,7 @@
 import streamlit as st
 import plotly.graph_objects as go
 import pandas as pd
-from app_utils import NAVY, GOLD, GREEN, RED, GRAY, LIGHT, LAYOUT_BASE, load_merged, page_header, section_title
+from app_utils import NAVY, GOLD, GREEN, GRAY, LIGHT, LAYOUT_BASE, load_merged, page_header, section_title
 
 st.set_page_config(page_title="Comparison Tool", page_icon="⚖️", layout="wide")
 page_header(
@@ -90,53 +90,3 @@ for i, (title, col, color, scale) in enumerate(CHART_METRICS):
     with cols[i % 2]:
         st.plotly_chart(fig, use_container_width=True)
 
-# ── Radar chart ───────────────────────────────────────────────────────────────
-section_title("Radar — Normalized Profile")
-st.markdown(
-    f'<p style="color:{GRAY};font-size:13px">All metrics normalized 0–1 within the '
-    f'full 428-county dataset (1 = best in class).</p>',
-    unsafe_allow_html=True,
-)
-
-RADAR_METRICS = [
-    ("Yield",          "yield_2025_pct",    True),
-    ("Affordability",  "median_home_value", False),
-    ("Rent Growth",    "yield_change_pct",  True),
-    ("Enrollment",     "total_enrollment",  True),
-    ("Housing Deficit","housing_deficit",   True),
-    ("Education",      "pct_bachelor_plus", True),
-]
-
-palette = [NAVY, GOLD, GREEN, RED, "#4472C4", "#CC6000"]
-radar_fig = go.Figure()
-
-for idx, county_label in enumerate(selected):
-    row = view[view["label"] == county_label]
-    if row.empty:
-        continue
-    vals, cats = [], []
-    for cat, col, higher in RADAR_METRICS:
-        if col in df.columns and pd.notna(row[col].values[0]):
-            mn, mx = df[col].min(), df[col].max()
-            n = (row[col].values[0] - mn) / (mx - mn) if mx > mn else 0.5
-            vals.append(float(n) if higher else float(1 - n))
-        else:
-            vals.append(0.0)
-        cats.append(cat)
-
-    radar_fig.add_trace(go.Scatterpolar(
-        r=vals + [vals[0]],
-        theta=cats + [cats[0]],
-        fill="toself",
-        name=county_label,
-        line_color=palette[idx % len(palette)],
-        opacity=0.7,
-    ))
-
-radar_fig.update_layout(
-    **LAYOUT_BASE,
-    polar=dict(radialaxis=dict(visible=True, range=[0, 1], tickfont=dict(size=9))),
-    showlegend=True,
-    height=420, margin=dict(l=40, r=40, t=20, b=20),
-)
-st.plotly_chart(radar_fig, use_container_width=True)
