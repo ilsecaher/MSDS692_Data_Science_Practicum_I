@@ -231,21 +231,21 @@ box_fig.add_trace(go.Box(
     y=raw_2024, name="2024 Actual",
     marker_color=NAVY, line_color=NAVY,
     fillcolor=f"rgba(27,58,107,0.18)",
-    medianline=dict(color=GOLD, width=3),
+    medianline_color=GOLD, medianline_width=3,
     boxpoints=False,
 ))
 box_fig.add_trace(go.Box(
     y=raw_2025, name="2025 Predicted",
     marker_color=NAVY, line_color=NAVY,
     fillcolor=f"rgba(27,58,107,0.18)",
-    medianline=dict(color=GOLD, width=3),
+    medianline_color=GOLD, medianline_width=3,
     boxpoints=False,
 ))
 box_fig.add_trace(go.Box(
     y=raw_2026, name="2026 Predicted",
     marker_color=NAVY, line_color=NAVY,
     fillcolor=f"rgba(27,58,107,0.18)",
-    medianline=dict(color=GOLD, width=3),
+    medianline_color=GOLD, medianline_width=3,
     boxpoints=False,
 ))
 box_fig.update_layout(
