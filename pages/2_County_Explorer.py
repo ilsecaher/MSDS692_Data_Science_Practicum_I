@@ -39,7 +39,7 @@ with st.sidebar:
     if len(enr) > 0:
         enr_range = st.slider(
             "Enrollment (students)", 0.0, float(enr.max()),
-            (0.0, float(enr.max())), step=1000, format="%.0f",
+            (0.0, float(enr.max())), step=1000.0, format="%.0f",
         )
     else:
         enr_range = (0.0, 1e9)

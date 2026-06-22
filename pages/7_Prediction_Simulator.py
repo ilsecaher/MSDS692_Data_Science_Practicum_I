@@ -59,7 +59,7 @@ with col_l:
     vacancy_rate = st.slider(
         "Vacancy Rate (%)",
         min_value=2.0, max_value=25.0,
-        value=float(nat_med_vac * 100), step=0.5, format="%.1f%%",
+        value=float(nat_med_vac * 100), step=0.5, format="%.1f",
     )
 
 # ── Estimation model ──────────────────────────────────────────────────────────
