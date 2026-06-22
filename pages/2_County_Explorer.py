@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from utils import NAVY, GOLD, GRAY, LIGHT, load_merged, page_header, section_title
+from app_utils import NAVY, GOLD, GRAY, LIGHT, load_merged, page_header, section_title
 
 st.set_page_config(page_title="County Explorer", page_icon="🔍", layout="wide")
 page_header(

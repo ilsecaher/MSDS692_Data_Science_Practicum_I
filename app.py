@@ -1,7 +1,7 @@
 import streamlit as st
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from utils import (
+from app_utils import (
     NAVY, GOLD, RED, GREEN, LIGHT, GRAY, FONT, LAYOUT_BASE,
     load_predictions, load_master, page_header, kpi_row, section_title,
 )

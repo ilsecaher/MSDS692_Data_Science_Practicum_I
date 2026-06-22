@@ -1,7 +1,7 @@
 import streamlit as st
 import plotly.graph_objects as go
 import plotly.express as px
-from utils import (
+from app_utils import (
     NAVY, GOLD, GREEN, RED, GRAY, LIGHT, LAYOUT_BASE,
     load_merged, page_header, section_title,
 )

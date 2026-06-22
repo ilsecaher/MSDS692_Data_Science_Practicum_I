@@ -1,7 +1,7 @@
 import streamlit as st
 import plotly.graph_objects as go
 import numpy as np
-from utils import NAVY, GOLD, GREEN, RED, GRAY, LIGHT, LAYOUT_BASE, load_merged, page_header, section_title
+from app_utils import NAVY, GOLD, GREEN, RED, GRAY, LIGHT, LAYOUT_BASE, load_merged, page_header, section_title
 
 st.set_page_config(page_title="Prediction Simulator", page_icon="🎮", layout="wide")
 page_header(
