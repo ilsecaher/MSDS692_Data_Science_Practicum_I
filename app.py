@@ -227,27 +227,17 @@ raw_2025 = df[df["year"] == 2025]["predicted_yield_pct"].dropna()
 raw_2026 = df[df["year"] == 2026]["predicted_yield_pct"].dropna()
 
 box_fig = go.Figure()
-box_fig.add_trace(go.Box(
-    y=raw_2024, name="2024 Actual",
-    marker_color=NAVY, line_color=NAVY,
-    fillcolor=f"rgba(27,58,107,0.18)",
-    medianline_color=GOLD, medianline_width=3,
-    boxpoints=False,
-))
-box_fig.add_trace(go.Box(
-    y=raw_2025, name="2025 Predicted",
-    marker_color=NAVY, line_color=NAVY,
-    fillcolor=f"rgba(27,58,107,0.18)",
-    medianline_color=GOLD, medianline_width=3,
-    boxpoints=False,
-))
-box_fig.add_trace(go.Box(
-    y=raw_2026, name="2026 Predicted",
-    marker_color=NAVY, line_color=NAVY,
-    fillcolor=f"rgba(27,58,107,0.18)",
-    medianline_color=GOLD, medianline_width=3,
-    boxpoints=False,
-))
+for label, series in [("2024 Actual", raw_2024), ("2025 Predicted", raw_2025), ("2026 Predicted", raw_2026)]:
+    box_fig.add_trace(go.Box(
+        y=series.tolist(),
+        name=label,
+        boxpoints=False,
+    ))
+box_fig.update_traces(
+    marker_color=NAVY,
+    fillcolor="rgba(27,58,107,0.18)",
+    line_color=NAVY,
+)
 box_fig.update_layout(
     **LAYOUT_BASE,
     title="<b>Yield Box Plot Comparison</b>",
