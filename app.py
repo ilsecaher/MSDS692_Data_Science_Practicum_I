@@ -1,9 +1,7 @@
 import streamlit as st
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 from app_utils import (
-    NAVY, GOLD, RED, GREEN, LIGHT, GRAY, FONT, LAYOUT_BASE,
-    load_predictions, load_master, page_header, kpi_row, section_title,
+    NAVY, GOLD, GREEN, LIGHT, GRAY, FONT,
+    load_predictions, page_header, kpi_row, section_title,
 )
 
 st.set_page_config(
@@ -12,7 +10,6 @@ st.set_page_config(
     layout="wide",
 )
 
-# ── Hero header ───────────────────────────────────────────────────────────────
 st.markdown(
     f"""
     <div style="background:{NAVY};padding:32px 36px 24px;border-radius:12px;margin-bottom:24px">
@@ -29,12 +26,14 @@ st.markdown(
         Which U.S. college-town counties appear to have the strongest rental investment
         potential, and why?
       </p>
+      <p style="color:#8AA6C8;margin:12px 0 0;font-size:13px;font-family:Arial,sans-serif">
+        Use the sidebar to explore all pages →
+      </p>
     </div>
     """,
     unsafe_allow_html=True,
 )
 
-# ── Top-line stats ────────────────────────────────────────────────────────────
 kpi_row([
     ("College-Town Counties", "428", NAVY),
     ("States Covered", "49", GOLD),
@@ -50,7 +49,7 @@ col_left, col_right = st.columns([3, 2], gap="large")
 with col_left:
     section_title("Project Overview")
     st.markdown(
-        f"""
+        """
         This project builds a machine learning pipeline to identify which U.S. college-town
         counties offer the strongest gross rental yield potential for real estate investors.
         Using a **Random Forest** model trained on 13 years of county-level data, we generate
@@ -71,7 +70,7 @@ with col_left:
 
     section_title("Data Sources")
     for src, desc in [
-        ("Zillow (ZORI / ZHVI)", "Monthly rent index (ZORI) and home value index (ZHVI) at county level, 2012–2024. Primary source for yield computation."),
+        ("Zillow (ZORI / ZHVI)", "Monthly rent index and home value index at county level, 2012–2024. Primary source for yield computation."),
         ("U.S. Census ACS", "5-year estimates for income, rent, home value, vacancy rate, and educational attainment. Interpolated across census waves."),
         ("IPEDS (Postsecondary Education)", "Annual enrollment, housing capacity, graduation rates, room & board costs, and admissions data for colleges within each county."),
     ]:
@@ -89,7 +88,7 @@ with col_right:
     st.markdown(
         f"""<div style="background:{NAVY};border-radius:10px;padding:20px 24px;margin-bottom:16px">
           <p style="color:{GOLD};font-size:12px;margin:0 0 4px;letter-spacing:0.5px">BEST MODEL · RANDOM FOREST</p>
-          <p style="color:#B0C4E8;font-size:12px;margin:0 0 16px">Test set: 2024 (510 counties)</p>
+          <p style="color:#B0C4E8;font-size:12px;margin:0 0 16px">Test set: 2024 · 510 counties · trained on 2012–2023</p>
           <div style="display:flex;gap:16px;flex-wrap:wrap">
             <div style="flex:1;background:rgba(255,255,255,0.08);border-radius:8px;padding:14px;text-align:center">
               <div style="color:{GOLD};font-size:24px;font-weight:700">0.57%</div>
@@ -106,47 +105,27 @@ with col_right:
           </div>
           <p style="color:#8AA6C8;font-size:11px;margin:12px 0 0;line-height:1.5">
             Tuned RF outperformed LightGBM, XGBoost, and Ridge baselines on the held-out
-            2024 test set. Errors are in percentage-point yield — a 0.57% MAE on yields
-            averaging ~6% represents roughly 9% relative error.
+            2024 test set. A 0.57% MAE on yields averaging ~6% represents ~9% relative error.
+            See <strong style="color:{GOLD}">The Model</strong> page for full details.
           </p>
         </div>""",
         unsafe_allow_html=True,
     )
 
-    section_title("Model Comparison")
-    models = ["Random Forest", "LightGBM", "XGBoost", "Ridge (baseline)"]
-    maes   = [0.567, 0.627, 0.605, 0.747]
-    colors = [GOLD if m == "Random Forest" else "#4472C4" for m in models]
-
-    fig = go.Figure(go.Bar(
-        x=maes, y=models, orientation="h",
-        marker_color=colors,
-        text=[f"{v:.3f}%" for v in maes],
-        textposition="outside",
-    ))
-    fig.update_layout(
-        **LAYOUT_BASE,
-        xaxis=dict(title="MAE (%, lower is better)", showgrid=True, gridcolor="#E5E7EB"),
-        yaxis=dict(showgrid=False),
-        height=220, margin=dict(l=10, r=60, t=10, b=30),
-        showlegend=False,
-    )
-    st.plotly_chart(fig, use_container_width=True)
-
-    section_title("How to Use This Dashboard")
-    steps = [
-        ("🗺️ National Map", "Bird's-eye view of predicted yields by state"),
-        ("🔍 County Explorer", "Filter and search all 428 counties"),
-        ("💰 Investment Opportunities", "AI-curated high-potential markets"),
-        ("⚖️ Comparison Tool", "Compare up to 5 counties side-by-side"),
-        ("📈 Historical Trends", "13-year trajectory for any county"),
-        ("🧠 What Drives Yield?", "Feature importance and key drivers"),
-        ("🎮 Prediction Simulator", "What-if yield estimator"),
+    section_title("Dataset at a Glance")
+    rows = [
+        ("Training rows", "6,113"),
+        ("Test rows (2024)", "510"),
+        ("Features used", "20+"),
+        ("CV strategy", "Walk-forward (yearly folds)"),
+        ("Prediction years", "2025 & 2026"),
+        ("Models compared", "RF, LightGBM, XGBoost, Ridge"),
     ]
-    for icon_name, desc in steps:
+    for label, val in rows:
         st.markdown(
-            f'<div style="padding:4px 0;font-size:13px">'
-            f'<strong style="color:{NAVY}">{icon_name}</strong>'
-            f'<span style="color:{GRAY}"> — {desc}</span></div>',
+            f'<div style="display:flex;justify-content:space-between;padding:5px 0;'
+            f'border-bottom:1px solid #E5E7EB;font-size:13px">'
+            f'<span style="color:{GRAY}">{label}</span>'
+            f'<span style="color:{NAVY};font-weight:600">{val}</span></div>',
             unsafe_allow_html=True,
         )
