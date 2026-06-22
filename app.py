@@ -24,7 +24,6 @@ LAYOUT_BASE = dict(
     plot_bgcolor="white",
     paper_bgcolor="white",
     title_font=dict(size=16, color=NAVY, family="Arial, sans-serif"),
-    margin=dict(l=10, r=70, t=50, b=40),
 )
 
 CAT_COLORS = {
