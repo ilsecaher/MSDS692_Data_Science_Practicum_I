@@ -39,12 +39,12 @@ with col_l:
     home_value = st.slider(
         "Median Home Value ($)",
         min_value=100_000, max_value=1_500_000,
-        value=int(nat_med_hv), step=10_000, format="$%d",
+        value=int(nat_med_hv), step=10_000, format="%d",
     )
     monthly_rent = st.slider(
         "Median Monthly Rent ($)",
         min_value=400, max_value=3_000,
-        value=int(nat_med_rent), step=50, format="$%d",
+        value=int(nat_med_rent), step=50, format="%d",
     )
     enrollment = st.slider(
         "Total Student Enrollment",

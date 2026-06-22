@@ -33,7 +33,7 @@ with st.sidebar:
     hv_min = float(df["median_home_value"].dropna().min())
     hv_max = float(df["median_home_value"].dropna().max())
     hv_range = st.slider("Home Value ($)", hv_min, hv_max,
-                          (hv_min, hv_max), step=10000, format="$%.0f")
+                          (hv_min, hv_max), step=10000.0, format="%.0f")
 
     enr = df["total_enrollment"].dropna()
     if len(enr) > 0:
