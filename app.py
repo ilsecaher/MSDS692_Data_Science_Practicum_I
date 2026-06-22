@@ -105,8 +105,8 @@ with col_right:
               <div style="color:#B0C4E8;font-size:11px;margin-top:4px">RMSE</div>
             </div>
             <div style="flex:1;background:rgba(255,255,255,0.08);border-radius:8px;padding:14px;text-align:center">
-              <div style="color:{GOLD};font-size:24px;font-weight:700">0.66</div>
-              <div style="color:#B0C4E8;font-size:11px;margin-top:4px">R²</div>
+              <div style="color:{GOLD};font-size:24px;font-weight:700">66%</div>
+              <div style="color:#B0C4E8;font-size:11px;margin-top:4px">R² (variance explained)</div>
             </div>
           </div>
           <p style="color:#8AA6C8;font-size:11px;margin:12px 0 0;line-height:1.5">
