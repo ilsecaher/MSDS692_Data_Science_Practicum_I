@@ -105,7 +105,7 @@ FI = pd.DataFrame({
 CAT_COLORS = {"Demographic (ACS)": NAVY, "Market (Zillow)": "#4472C4", "College (IPEDS)": GOLD}
 
 fi_col, pie_col = st.columns([3, 2])
-fi_sorted = FI.sort_values("importance")
+fi_sorted = FI.sort_values("importance", ascending=False)
 
 with fi_col:
     fig_fi = go.Figure()
@@ -122,7 +122,9 @@ with fi_col:
         title="<b>Top 10 Feature Importances</b>",
         barmode="overlay",
         xaxis=dict(title="Relative Importance", showgrid=True, gridcolor="#E5E7EB"),
-        yaxis=dict(showgrid=False),
+        yaxis=dict(showgrid=False, autorange="reversed",
+                   categoryorder="array",
+                   categoryarray=fi_sorted["feature"].tolist()),
         legend=dict(orientation="h", y=-0.2, x=0),
         height=380, margin=dict(l=10, r=80, t=45, b=60),
     )
