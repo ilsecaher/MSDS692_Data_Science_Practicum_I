@@ -108,23 +108,33 @@ fi_col, pie_col = st.columns([3, 2])
 fi_sorted = FI.sort_values("importance", ascending=False)
 
 with fi_col:
+    bar_colors = [CAT_COLORS[cat] for cat in fi_sorted["category"]]
+
     fig_fi = go.Figure()
+
+    # Single trace — preserves exact sort order
+    fig_fi.add_trace(go.Bar(
+        x=fi_sorted["importance"],
+        y=fi_sorted["feature"],
+        orientation="h",
+        marker_color=bar_colors,
+        text=[f"{v:.4f}" for v in fi_sorted["importance"]],
+        textposition="outside",
+        showlegend=False,
+    ))
+
+    # Invisible dummy traces just for the legend
     for cat, color in CAT_COLORS.items():
-        sub = fi_sorted[fi_sorted["category"] == cat]
         fig_fi.add_trace(go.Bar(
-            x=sub["importance"], y=sub["feature"], orientation="h",
-            marker_color=color, name=cat,
-            text=[f"{v:.4f}" for v in sub["importance"]],
-            textposition="outside",
+            x=[None], y=[None], orientation="h",
+            marker_color=color, name=cat, showlegend=True,
         ))
+
     fig_fi.update_layout(
         **LAYOUT_BASE,
         title="<b>Top 10 Feature Importances</b>",
-        barmode="overlay",
         xaxis=dict(title="Relative Importance", showgrid=True, gridcolor="#E5E7EB"),
-        yaxis=dict(showgrid=False, autorange="reversed",
-                   categoryorder="array",
-                   categoryarray=fi_sorted["feature"].tolist()),
+        yaxis=dict(showgrid=False, autorange="reversed"),
         legend=dict(orientation="h", y=-0.2, x=0),
         height=380, margin=dict(l=10, r=80, t=45, b=60),
     )
